@@ -1,113 +1,29 @@
-
-<html lang="zh-CN">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="UTF-8">
-  <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
-  <meta content="yes" name="apple-mobile-web-app-capable">
-  <meta content="yes" name="apple-touch-fullscreen">
-  <meta content="black" name="apple-mobile-web-app-status-bar-style">
-  <meta content="320" name="MobileOptimized">
-  <!-- 苹果微信通用优化：降低拦截概率 -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta name="referrer" content="origin-when-cross-origin">
-  <title>群聊加入</title>
-  <style>
-    body { margin: 0; padding: 0; overflow: hidden; }
-    .loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-      z-index: 9999;
-    }
-    .loader-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    .loader-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    .loader-text {
-      font-size: 16px;
-      color: #666;
-      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-      text-align: center;
-    }
-    .loader-nums {
-      display: inline-flex;
-      align-items: center;
-      color: #3498db;
-    }
-    .loader-num {
-      visibility: hidden;
-      opacity: 0;
-      animation: num-cycle 2s step-end infinite;
-    }
-    .loader-num:nth-child(1) { animation-delay: 0s; }
-    .loader-num:nth-child(2) { animation-delay: 0.3s; }
-    .loader-num:nth-child(3) { animation-delay: 0.6s; }
-    .loader-num:nth-child(4) { animation-delay: 0.9s; }
-    @keyframes num-cycle {
-      0% { visibility: hidden; opacity: 0; }
-      1% { visibility: visible; opacity: 1; }
-      70% { visibility: visible; opacity: 1; }
-      71% { visibility: hidden; opacity: 0; }
-      100% { visibility: hidden; opacity: 0; }
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS 微信测试</title>
+    <style>
+        iframe { width: 100%; height: 500px; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
-  <div class="loader">
-    <div class="loader-group">
-      <div class="loader-spinner"></div>
-      <div class="loader-text">
-        群聊加入中
-        <div class="loader-nums">
-          <span class="loader-num">.</span>
-          <span class="loader-num">.</span>
-          <span class="loader-num">.</span>
-          <span class="loader-num">.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script>
-    // 你的宝塔目标链接（无需修改，保持原样）
-    const fullUrl = 'https://a.6611.fun/group.php/index/share/id/145/t/39cf80539ff482c6c118d1bb7a4b2e2b/time/1773337246.html';
-    
-    // 苹果微信兼容补丁：模拟手动点击跳转，绕过跨域拦截
-    document.addEventListener('DOMContentLoaded', function() {
-      // 延迟1秒跳转，保留加载动画体验，和原效果一致
-      setTimeout(() => {
-        // 核心兼容：创建a标签模拟点击，比直接window.location更适配苹果微信
-        const link = document.createElement('a');
-        link.href = fullUrl;
-        link.target = '_self'; // 同窗口跳转
-        document.body.appendChild(link);
-        link.click(); // 触发原生点击事件
-        document.body.removeChild(link);
+
+    <!-- 测试一个已知肯定不允许 iframe 的网站，如淘宝 -->
+    <h3>测试 iframe 加载：</h3>
+    <iframe id="myFrame" src="https://www.taobao.com"></iframe>
+
+    <script>
+        var iframe = document.getElementById('myFrame');
+        iframe.onload = function() {
+            console.log("iframe 加载完成事件触发");
+            alert("iframe 触发了 onload，但这不代表内容一定渲染出来了（可能是空白页或拦截页）。");
+        };
         
-        // 双重兜底：防止模拟点击失效，直接跳转
-        window.location.href = fullUrl;
-      }, 1000);
-    });
-  </script>
+        iframe.onerror = function() {
+            alert("iframe 加载出错");
+        };
+    </script>
 </body>
 </html>
