@@ -2,27 +2,53 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS 微信测试</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>加入群聊</title>
     <style>
-        iframe { width: 100%; height: 500px; border: 1px solid #ccc; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden; /* 避免双层滚动条 */
+        }
+        .title {
+            padding: 12px 16px;
+            font-size: 16px;
+            background: #f5f5f5;
+        }
+        #loadTip {
+            padding: 8px 16px;
+            color: #666;
+            font-size: 14px;
+        }
+        /* 全屏自适应 iframe */
+        iframe {
+            width: 100%;
+            height: calc(100vh - 70px);
+            border: 1px solid #ccc;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 测试一个已知肯定不允许 iframe 的网站，如淘宝 -->
-    <h3>测试 iframe 加载：</h3>
-    <iframe id="myFrame" src="https://a.6611.fun/group.php/index/share/id/145/t/f6d161e1809b714811a64697602cc240/time/1773506499.html"></iframe>
+    <iframe id="myFrame" src="https://www.taobao.com"></iframe>
 
     <script>
         var iframe = document.getElementById('myFrame');
+        var loadTip = document.getElementById('loadTip');
+
         iframe.onload = function() {
             console.log("iframe 加载完成事件触发");
-            alert("iframe 触发了 onload，但这不代表内容一定渲染出来了（可能是空白页或拦截页）。");
+          
         };
         
         iframe.onerror = function() {
-            alert("iframe 加载出错");
+            console.log("iframe 加载出错");
+            loadTip.innerHTML = "iframe 加载失败";
         };
     </script>
 </body>
